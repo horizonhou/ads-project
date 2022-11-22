@@ -43,38 +43,38 @@ class Agent(object):
 
     def action(self, obs):
         self.iteration += 1
-        # try: 
-        new_buyer_covariates, last_sale, profit_each_team = obs
-        self._process_last_sale(last_sale, profit_each_team, new_buyer_covariates)
+        try: 
+            new_buyer_covariates, last_sale, profit_each_team = obs
+            self._process_last_sale(last_sale, profit_each_team, new_buyer_covariates)
 
-        if self.project_part == 1:
-            if self.iteration > 2:
-                 
-                try:
-                    if self.iteration%100 == 0: #check mean competitor alpha
-                        self.alpha_competitor1 = [x for x in self.alpha_competitor if x<=1 and x>=0]
-                        mean_competitor_alpha = np.mean(self.alpha_competitor1)
-                        self.if_good = (mean_competitor_alpha >= 0.5)
-                        if not self.if_good :# evil team
-                            self.alpha = mean_competitor_alpha*0.7
-                except:
-                    pass
-                        #return [mean_competitor_alpha]
+            if self.project_part == 1:
+                if self.iteration > 2:
+
+                    try:
+                        if self.iteration%100 == 0: #check mean competitor alpha
+                            self.alpha_competitor1 = [x for x in self.alpha_competitor if x<=1 and x>=0]
+                            mean_competitor_alpha = np.mean(self.alpha_competitor1)
+                            self.if_good = (mean_competitor_alpha >= 0.5)
+                            if not self.if_good :# evil team
+                                self.alpha = mean_competitor_alpha*0.7
+                    except:
+                        pass
+                            #return [mean_competitor_alpha]
 
 
-                if self.if_good and self.iteration%100==0 and not self.iteration==0: #every 100 round, if the team is good, reset alpha
-                    self.alpha = 1 
-                if new_buyer_covariates[0]<5: #if valuation is low we allow opponent to win this round -> increase their alpha
-                    return [new_buyer_covariates[0]+100000]
-                if self.alpha_competitor[-1]>1:
-                    return [new_buyer_covariates[0]*self.alpha]
-                if self.alpha_competitor[-1]<=0.85:
-                    return [new_buyer_covariates[0]*self.alpha]
-                if abs(self.alpha_competitor[-1]-self.alpha_competitor[-2])/self.alpha_competitor[-2]>0.2:
-                    return [new_buyer_covariates[0]*self.alpha]# when they're evil use adaptive
-                else:  # when they're rational use tit_for_tat
-                    return [new_buyer_covariates[0]*(self.beta*0.9)]
-            else:
-                return [new_buyer_covariates[0]-0.01]
-        # except:
-            # return [new_buyer_covariates[0]-0.01]
+                    if self.if_good and self.iteration%100==0 and not self.iteration==0: #every 100 round, if the team is good, reset alpha
+                        self.alpha = 1 
+                    if new_buyer_covariates[0]<5: #if valuation is low we allow opponent to win this round -> increase their alpha
+                        return [new_buyer_covariates[0]+100000]
+                    if self.alpha_competitor[-1]>1:
+                        return [new_buyer_covariates[0]*self.alpha]
+                    if self.alpha_competitor[-1]<=0.85:
+                        return [new_buyer_covariates[0]*self.alpha]
+                    if abs(self.alpha_competitor[-1]-self.alpha_competitor[-2])/self.alpha_competitor[-2]>0.2:
+                        return [new_buyer_covariates[0]*self.alpha]# when they're evil use adaptive
+                    else:  # when they're rational use tit_for_tat
+                        return [new_buyer_covariates[0]*(self.beta*0.9)]
+                else:
+                    return [new_buyer_covariates[0]-0.01]
+        except:
+            return [new_buyer_covariates[0]-0.01]

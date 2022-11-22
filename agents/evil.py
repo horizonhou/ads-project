@@ -17,4 +17,8 @@ class Agent(object):
 
     def action(self, obs):
         new_buyer_covariates, last_sale, profit_each_team = obs
-        return [-10000000]
+        if self.iteration % 2 == 0:
+            return [-10000000]
+        else:
+            return [new_buyer_covariates[0]-0.01]
+        
