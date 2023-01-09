@@ -46,3 +46,24 @@ To combat this evil behavior and other similar behaviors, we implemented a serie
 * When the opponent is playing rationally, we play tit-for-tat, we learn opponent’s previous ɑ and setting it as the β value, then undercut them by 0.9. <br> 
 
 Below are the results for running the final algorithm ThreeHonestMerchant against the dummy_fixed_prices_adaptive agent and the previous iterations, T = 2500.
+![image1](images/profit.png)
+Based on these local running results, we were confident about our performance on the pricing strategy. Our algorithm consistently outperformed other competitor iterations and the template competitors given. However, there could be more sophisticated ways to play the game that we have not considered yet, and that might be our blindspot where our algorithm will have a hard time competing against. <br>
+Below is a table for the official competition result of part one of the final project. We ended up being ranked 12th amongst the 24 teams of students, dummy agents, and teaching staff. 
+![image1](images/result1.png)
+We did not perform as well as we anticipated, likely due to the fact that we have not considered all the different ways the opponent could play. Our average revenue per game was around 3868, which is consistent with our local run against the dummy_fixed_prices_adaptive agent. By checking the official result head to toe (the log of each game), we realized that our revenue is not consistent across different opponents. This means that if the opponent is playing a game such that it will drive a price war or prevent both sides from gaining the maximum profit possible, we don’t have mechanisms to prevent that and gain stable revenue when the other player is driving down the prices. However, in a real market sense, it’s hard to compete with competitors who keep giving low prices. This kind of competition is unhealthy for the market and both sides will end up not gaining much revenue. <br>
+After the final result and moving forward to the second part, where we need to combine demand estimation and revenue maximization with the competition element, we decided to keep the majority of the logic and make small tweaks to the coefficients to hopefully gain more revenue.
+
+### Final Strategy for Part 2: 
+* We followed the same strategy in Part 1, with some modifications to adjust for the new two-item scenario and improve the strategy performance in Part 1:
+Since we did not have the customer valuation, we set our prediction as customer valuation
+Due to the presence of two items, and the fact that the customer will only choose one item to buy, we set an incredibly high price if the valuation for both of the two items for the current customer is lower than 5. We realized this scenario is slightly different from Part 1, because the probability of having a valuation lower than 5 for one item is much larger than the probability of having two lower than 5  valuations for one customer.
+* Even though there are two items, we estimate our opponent’s ɑ just based on the sold item. Because we thought that the sold item best reflected the opponent's strategy. 
+* We changed the evaluation metric of whether the opponent is playing as a good merchant to be more sensitive. Before, we took the mean of the whole set of ɑ for  our opponent to check for their behavior. However, we thought our opponent may not pursue a consistent strategy the whole time. It was highly possible that they would change their strategy based on our behavior or simply as time went over. So we decided to take the mean the most recent 20 ɑ to check for their behavior. This approach to some extent eliminated the noise from previous behaviors and just focused on their current strategy.
+* We returned pricing for the two items using our predicted valuation multiplied by the same ɑ (our factor). This method will automatically lead the customer to buy the more expensive item. Because:
+Predicted valuation: V1 and V2
+Our Price:	P1 = V1*ɑ and P2 = V2*ɑ
+Customer buys neither item if: V1< P1 and V2<P2 (This will not happen because ɑ <= 1)
+Customer buys item 1 if: V1>=P1 and V1 - P1 >= V2 - P2
+If V1 >= V2, then V1 – P1 = V1 – V1*ɑ = V1*(1-ɑ), V2 – P2 = V2 – V2*ɑ = V2*(1-ɑ)
+Given V1 >= V2, We have V1*(1-ɑ) >= V2*(1-ɑ), thus V1 – P1 >= V2 – P2
+So Customer will buy item 1 automatically if V1 >= V2, and vice versa
