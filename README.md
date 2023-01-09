@@ -13,3 +13,25 @@ We wanted to find a set of prices which can be used in the calculation of max re
 ![image1](images/data_dis.png)
 We finally sampled prices from 0.1 to 30 in intervals of 0.1 and got a price set with a size of 89401, the price set is shown below.
 ![image1](images/data_dis1.png)
+### Models and price optimization
+#### LogisticRegression
+![image1](images/logistic_regression.png)
+Logistic Regression performed well overall with an average per-customer runtime of 0.271 second. It also beat the  dummy_fixed_prices_adaptive agent with T =2500, with a total profit of nearly 4000. All models were run against the dummy_fixed_prices_adaptive agent as a benchmark because we assume the opponent will be playing rationally most of the time, like this adaptive agent. Also other more advanced agents were not available for testing, so we compared our performance with this agent. <br>
+#### Random Forest
+![image1](images/random_forest.png)
+Random Forest performed better than Logistic Regression but with an average per-customer runtime of 0.45 second. It didn’t beat the  dummy_fixed_prices_adaptive agent with T =2500, with a total profit of nearly 4500. In addition, the size of the random forest model is large, more than 30 Mb. <br>
+#### KNN
+![image1](images/knn.png)
+KNN performed best among the three models but with a much longer average per-customer runtime of 1.78 second. It didn’t beat the  dummy_fixed_prices_adaptive agent with T =2500, with a total profit of over 5000. Due to the time complexity of the KNN model, we chose not to proceed with this approach. <br>
+
+### Final Model: LogisticRegression
+In our final model, we used logistics regression to predict the customer’s valuation for the two products. Even though the test accuracy of logistic regression was not as high as that of Random Forest, we still picked logistic regression since it gave us an acceptable accuracy and it took way less time than Random Forest to compute the customer covariates. In the contest, we had 500 mm for each step. We recorded the time for logistic regression and Random Forest, and we found that logistic regression is safely within the time requirement, but Random Forest was on the edge of time limit. To be conservative, we chose logistic regression to achieve a safer run time.
+
+# B: Pricing under competition
+For part one, we utilize the user valuation of each item for each game. We also observe the price the opponent gave and who the customer bought from the last round. From there we needed to anticipate the pricing strategy of the opponent and come up with our own pricing strategy that would ultimately produce the highest revenue. 
+
+### Final Strategy for part 1: Dynamic Pricing based on Opponent Strategy
+During one of the trial runs, we got negative revenue results. This could potentially be due to opponents playing evil and setting prices ridiculously high, or give negative prices occasionally, and skew our ɑ such that it becomes negative and we keep giving negative prices. This will result in a infinite loop of “winning” the customer because our price is lower, and it keeps lowering our ɑ, we then accumulate negative revenue. <br>
+<br>
+To combat this evil behavior and other similar behaviors, we implemented a series of steps that combines the best ideas from the previous iterations to ensure the best strategy: 
+
