@@ -33,5 +33,14 @@ For part one, we utilize the user valuation of each item for each game. We also 
 ### Final Strategy for part 1: Dynamic Pricing based on Opponent Strategy
 During one of the trial runs, we got negative revenue results. This could potentially be due to opponents playing evil and setting prices ridiculously high, or give negative prices occasionally, and skew our ɑ such that it becomes negative and we keep giving negative prices. This will result in a infinite loop of “winning” the customer because our price is lower, and it keeps lowering our ɑ, we then accumulate negative revenue. <br>
 <br>
-To combat this evil behavior and other similar behaviors, we implemented a series of steps that combines the best ideas from the previous iterations to ensure the best strategy: 
 
+To combat this evil behavior and other similar behaviors, we implemented a series of steps that combines the best ideas from the previous iterations to ensure the best strategy: 
+* Set a high price (close to valuation) on the first round. This is to set up the tone for cooperative play.
+* Set up a checkpoint at round 100 to see if the opponent has been playing rational or not. We check by reverse engineering out the ɑ they could potentially be using. If their ɑ<0.5, we consider them playing evil and set our ɑ to 70% of theirs. 
+* Every 100 rounds, reset ɑ if the team is playing nice. This strategy is used to prevent price war as well as increase opponent’s ɑ as discussed above.  
+* When the valuation < 5, we return a crazy high price and let the opponent win that round while throwing them off. This strategy was discussed in the previous iteration. 
+* For all other rounds, we check if the team is playing evil:
+* Evil: when opponent’s last ɑ is too high (>1) or too low (<=0.85), or if their ɑ changed too dramatically from the round before the last round. 
+* Not evil: when the opponent is playing rationally, not satisfying above criteria. 
+* When the opponent is playing evil, we play adaptively, only adjust the price based on our own previous prices using self-adjusting ɑ like previous iterations. 
+* When the opponent is playing rationally, we play tit-for-tat, we learn opponent’s previous ɑ and setting it as the β value, then undercut them by 0.9. 
