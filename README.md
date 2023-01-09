@@ -43,4 +43,6 @@ To combat this evil behavior and other similar behaviors, we implemented a serie
 ** Evil: when opponent’s last ɑ is too high (>1) or too low (<=0.85), or if their ɑ changed too dramatically from the round before the last round. 
 ** Not evil: when the opponent is playing rationally, not satisfying above criteria. 
 * When the opponent is playing evil, we play adaptively, only adjust the price based on our own previous prices using self-adjusting ɑ like previous iterations. 
-* When the opponent is playing rationally, we play tit-for-tat, we learn opponent’s previous ɑ and setting it as the β value, then undercut them by 0.9. 
+* When the opponent is playing rationally, we play tit-for-tat, we learn opponent’s previous ɑ and setting it as the β value, then undercut them by 0.9. <br> 
+
+Below are the results for running the final algorithm ThreeHonestMerchant against the dummy_fixed_prices_adaptive agent and the previous iterations, T = 2500.
