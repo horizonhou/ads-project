@@ -66,4 +66,13 @@ Customer buys neither item if: V1< P1 and V2<P2 (This will not happen because ɑ
 Customer buys item 1 if: V1>=P1 and V1 - P1 >= V2 - P2 <br>
 If V1 >= V2, then V1 – P1 = V1 – V1*ɑ = V1*(1-ɑ), V2 – P2 = V2 – V2*ɑ = V2*(1-ɑ) <br>
 Given V1 >= V2, We have V1*(1-ɑ) >= V2*(1-ɑ), thus V1 – P1 >= V2 – P2 <br>
-So Customer will buy item 1 automatically if V1 >= V2, and vice versa <>br
+So Customer will buy item 1 automatically if V1 >= V2, and vice versa <br>
+
+Besides these modifications, our strategy remained the same as Part 1. Below is the result of the final competition for part two. 
+![image1](images/result2.png)
+Our algorithm performed better in part two compared to part one. We hypothesized that it could be due to our enhanced logic for competition, successful demand estimation, and maybe other teams are not performing as well.
+# Conclusion
+Reflecting on our performance, we were not satisfied with part 1 and were more satisfied with part 2. Like hypothesized above, many factors could have contributed to a better performance in part 2. However, we do hope that we could have run more trials in part 2. We missed most of the trial runs before the final competition due to time limitation and model package error, and wasted time on that instead of developing other models. <br>
+We were glad to catch the price war prevention aspect of the project early on. Price war happens when toxic competition occurs and each competitor is trying to undercut the other by lowering price, especially when there is no product differentiation. We named our team ThreeHonestMerchant because we wanted to do “business” with honesty and choose not to introduce trickery beyond what is rational, and we assume that most of the time the opponent is also playing rationally. However, based on some of the trail competition results, we needed safety nets that can allow us to respond if we do encounter a toxic competitor. <br>
+Another thing we could have done for part 2 demand estimation and price optimization was to deal with potentially missing or biased data. Even though we were not given the characteristics of each of the three user covariate, in real life these covariates could introduce bias to the system and thus create discriminatory individualized pricing for each buyer. <br>
+Overall, the class competition showed that sometimes more sophisticated models (like the KNN and RandomForest we tried) are not necessarily the best model in producing results in a timely manner. We learned that in a pricing competition like this one, factors such as user covariates and valuations, demand estimation, capacity constraints, opponent behavior etc. should be taken into account to produce the best results. This project was a valuable lesson about attention to detail and developing solutions that focus on the right data and interpretations, instead of algorithmic or model sophistication. 
